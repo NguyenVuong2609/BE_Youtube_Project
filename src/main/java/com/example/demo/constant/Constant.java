@@ -15,4 +15,7 @@ public class Constant {
     public static final String ADD_SUCCESSFUL = "add_successful";
     public static final String REMOVE_SUCCESSFUL = "remove_successful";
     public static final String NOT_LOGIN = "not_login";
+    public static final String PLAYLIST_NOT_FOUND = "playlist_not_found";
+    public static final String VIDEO_NOT_FOUND = "video_not_found";
+    public static final String CHANNEL_NOT_FOUND = "channel_not_found";
 }

@@ -16,10 +16,10 @@ import java.util.List;
 public class VideoDTO {
     @NotBlank
     @NotNull
-    private String vName;
+    private String name;
     @NotBlank
     @NotNull
-    private String vLink;
+    private String link;
     private boolean status = true;
     @NotNull
     @NotBlank

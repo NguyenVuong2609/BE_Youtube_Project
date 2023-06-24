@@ -18,5 +18,7 @@ public interface IVideoService extends IGenericService<Video> {
     Optional<User> findUserLikeByVideoId(Long vId, Long uId);
     Page<Video> findAllByStatusIsTrue(Pageable pageable);
     Iterable<Comment> findListCommentByVideoId(Long id);
-    void addComment(Video video);
+    Iterable<Video> showRandomVideoList(Pageable pageable);
+    Iterable<Video> findByStatusIsTrueOrderByViews();
+    Iterable<Video> findByNameContains(String name);
 }

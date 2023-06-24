@@ -56,6 +56,7 @@ public class ChannelController {
         if (channelService.existsByUserId(user.getId())) {
             return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_EXISTED), HttpStatus.OK);
         }
+        channel.setUser(user);
         channelService.save(channel);
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
     }
@@ -153,5 +154,32 @@ public class ChannelController {
         } else {
             return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
         }
+    }
+    @PutMapping("follow/{id}")
+    public ResponseEntity<?> followOrUnfollowChannel(@PathVariable Long id){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Channel> channel = channelService.findByIdAndStatusIsTrue(id);
+        if (!channel.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_NOT_FOUND), HttpStatus.OK);
+        }
+        boolean checkChannel = channelService.existsByIdAndUserIdAndStatusIsTrue(id,user.getId());
+        if (checkChannel){
+            return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+        }
+        List<User> followerList = channel.get().getFollowerList();
+        Optional<User> checkUser = channelService.findUserByChannel(user.getId(), id);
+        if (checkUser.isPresent()){
+            followerList.remove(checkUser.get());
+            channel.get().setFollowerList(followerList);
+            channelService.save(channel.get());
+            return new ResponseEntity<>(new ResponMessage(Constant.REMOVE_SUCCESSFUL), HttpStatus.OK);
+        }
+        followerList.add(user);
+        channel.get().setFollowerList(followerList);
+        channelService.save(channel.get());
+        return new ResponseEntity<>(new ResponMessage(Constant.ADD_SUCCESSFUL), HttpStatus.OK);
     }
 }

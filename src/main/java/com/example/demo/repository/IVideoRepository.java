@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
 @Repository
 public interface IVideoRepository extends JpaRepository<Video, Long> {
     Optional<Video> findByIdAndChannelId(Long vId, Long chId);
@@ -18,6 +19,7 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
     Iterable<Video> findAllByChannelIdAndStatusIsTrue(Long id);
 
     Iterable<Video> findAllByStatusIsTrue();
+
     Page<Video> findAllByStatusIsTrue(Pageable pageable);
 
     Optional<Video> findByIdAndStatusIsTrue(Long id);
@@ -27,6 +29,15 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
     Optional<User> findUserLikeByVideoId(
             @Param("id") Long id,
             @Param("uId") Long uId);
+
     @Query("select v.commentList from Video v where v.id = :id")
-    Iterable<Comment> findListCommentByVideoId(@Param("id") Long id);
+    Iterable<Comment> findListCommentByVideoId(
+            @Param("id") Long id);
+
+    @Query("select v from Video v order by RAND()")
+    Page<Video> showRandomVideoList(Pageable pageable);
+
+    Iterable<Video> findByStatusIsTrueOrderByViewsDesc();
+
+    Iterable<Video> findByNameContainsAndStatusIsTrue(String name);
 }

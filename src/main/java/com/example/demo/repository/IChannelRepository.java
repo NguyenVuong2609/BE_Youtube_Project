@@ -1,7 +1,10 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Channel;
+import com.example.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,4 +15,9 @@ public interface IChannelRepository extends JpaRepository<Channel, Long> {
     boolean existsByUserIdAndStatusIsTrue(Long id);
     Optional<Channel> findByUserIdAndStatusIsTrue(Long id);
     Optional<Channel> findByIdAndStatusIsTrue(Long id);
+    boolean existsByIdAndUserIdAndStatusIsTrue(Long chId, Long uId);
+    @Query("select distinct ch.followerList from Channel ch join ch.followerList fl where fl.id = :flId and ch.id = :chId")
+    Optional<User> findUserByChannel(
+            @Param("flId") Long flId,
+            @Param("chId") Long chId);
 }

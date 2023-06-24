@@ -1,6 +1,7 @@
 package com.example.demo.service.playlist;
 
 import com.example.demo.model.Playlist;
+import com.example.demo.model.Video;
 import com.example.demo.repository.IPlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,15 @@ public class PlaylistServiceImpl implements IPlaylistService{
     @Override
     public void deleteById(Long id) {
         playlistRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Playlist> findByIdAndStatusIsTrueAndUserId(Long plId, Long uId) {
+        return playlistRepository.findByIdAndStatusIsTrueAndUserId(plId,uId);
+    }
+
+    @Override
+    public Optional<Video> findVideoByPlaylist(Long vId, Long plId) {
+        return playlistRepository.findVideoByPlaylist(vId,plId);
     }
 }

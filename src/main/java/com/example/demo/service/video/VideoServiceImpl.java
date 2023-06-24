@@ -71,8 +71,18 @@ public class VideoServiceImpl implements IVideoService {
     }
 
     @Override
-    public void addComment(Video video) {
-        videoRepository.save(video);
+    public Iterable<Video> showRandomVideoList(Pageable pageable) {
+        return videoRepository.showRandomVideoList(pageable);
+    }
+
+    @Override
+    public Iterable<Video> findByStatusIsTrueOrderByViews() {
+        return videoRepository.findByStatusIsTrueOrderByViewsDesc();
+    }
+
+    @Override
+    public Iterable<Video> findByNameContains(String name) {
+        return videoRepository.findByNameContainsAndStatusIsTrue(name);
     }
 
     @Override

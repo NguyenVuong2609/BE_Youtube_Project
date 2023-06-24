@@ -28,8 +28,6 @@ public class ChannelServiceImpl implements IChannelService {
 
     @Override
     public void save(Channel channel) {
-        User user = userDetailService.getCurrentUser();
-        channel.setUser(user);
         channelRepository.save(channel);
     }
 
@@ -56,5 +54,15 @@ public class ChannelServiceImpl implements IChannelService {
     @Override
     public Optional<Channel> findByIdAndStatusIsTrue(Long id) {
         return channelRepository.findByIdAndStatusIsTrue(id);
+    }
+
+    @Override
+    public boolean existsByIdAndUserIdAndStatusIsTrue(Long chId, Long uId) {
+        return channelRepository.existsByIdAndUserIdAndStatusIsTrue(chId,uId);
+    }
+
+    @Override
+    public Optional<User> findUserByChannel(Long flId, Long chId) {
+        return channelRepository.findUserByChannel(flId,chId);
     }
 }

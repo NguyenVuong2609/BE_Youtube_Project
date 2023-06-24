@@ -22,7 +22,7 @@ public class Video {
     private Long id;
     @NotBlank
     @NotNull
-    private String vName;
+    private String name;
     @NotBlank
     @NotNull
     private String vLink;
@@ -53,7 +53,7 @@ public class Video {
     private String avatar;
 
     public Video(String vName, String vLink, String avatar, List<Category> categoryList) {
-        this.vName = vName;
+        this.name = vName;
         this.vLink = vLink;
         this.avatar = avatar;
         this.categoryList = categoryList;

@@ -39,10 +39,16 @@ public class VideoController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<?> showListVideoPage(
+    public ResponseEntity<?> getRandomList(
             @PageableDefault(size = 6) Pageable pageable) {
-        return new ResponseEntity<>(videoService.findAll(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(videoService.showRandomVideoList(pageable), HttpStatus.OK);
     }
+
+//    @GetMapping("/page")
+//    public ResponseEntity<?> showListVideoPage(
+//            @PageableDefault(size = 6) Pageable pageable) {
+//        return new ResponseEntity<>(videoService.findAll(pageable), HttpStatus.OK);
+//    }
 
     @GetMapping("{id}")
     public ResponseEntity<?> detailVideo(
@@ -54,13 +60,23 @@ public class VideoController {
         videoService.updateView(id);
         return new ResponseEntity<>(video, HttpStatus.OK);
     }
+
     @GetMapping("{id}/comment")
-    public ResponseEntity<?> getListCommentByVideoId(@PathVariable Long id){
+    public ResponseEntity<?> getListCommentByVideoId(
+            @PathVariable Long id) {
         Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
-        if (!video.isPresent()){
+        if (!video.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
         }
         return new ResponseEntity<>(videoService.findListCommentByVideoId(id), HttpStatus.OK);
+    }
+    @GetMapping("/topview")
+    public ResponseEntity<?> getListVideoByTopViews(){
+        return new ResponseEntity<>(videoService.findByStatusIsTrueOrderByViews(), HttpStatus.OK);
+    }
+    @GetMapping("/search/{name}")
+    public ResponseEntity<?> getVideoListSearchByName(@PathVariable String name){
+        return new ResponseEntity<>(videoService.findByNameContains(name), HttpStatus.OK);
     }
 
     @PostMapping
@@ -69,14 +85,14 @@ public class VideoController {
             @RequestBody
             VideoDTO videoDTO) {
         User user = userDetailService.getCurrentUser();
-        if (user.getId() == null){
+        if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
-        Optional<Channel> channel = channelService.findByIdAndStatusIsTrue(user.getId());
+        Optional<Channel> channel = channelService.findByUserIdAndStatusIsTrue(user.getId());
         if (!channel.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage("channel_" + Constant.NOT_FOUND), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_NOT_FOUND), HttpStatus.OK);
         }
-        Video video = new Video(videoDTO.getVName(), videoDTO.getVLink(), videoDTO.getAvatar(),
+        Video video = new Video(videoDTO.getName(), videoDTO.getLink(), videoDTO.getAvatar(),
                                 videoDTO.getCategoryList());
         videoService.save(video);
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
@@ -87,12 +103,12 @@ public class VideoController {
             @PathVariable Long id,
             @RequestBody VideoDTO videoDTO) {
         User user = userDetailService.getCurrentUser();
-        if (user.getId() == null){
+        if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
         Optional<Channel> channel = channelService.findByUserIdAndStatusIsTrue(user.getId());
         if (!channel.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage("channel_" + Constant.NOT_FOUND), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_NOT_FOUND), HttpStatus.OK);
         }
         Optional<Video> curVideo = videoService.findByIdAndChannelId(id, channel.get().getId());
         if (!curVideo.isPresent()) {
@@ -100,11 +116,11 @@ public class VideoController {
         }
         Optional<Video> video = videoService.findById(id);
         if (!video.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage(Constant.VIDEO_NOT_FOUND), HttpStatus.OK);
         }
-        curVideo.get().setVName(videoDTO.getVName());
+        curVideo.get().setName(videoDTO.getName());
         curVideo.get().setStatus(videoDTO.isStatus());
-        curVideo.get().setVLink(videoDTO.getVLink());
+        curVideo.get().setVLink(videoDTO.getLink());
         curVideo.get().setCategoryList(videoDTO.getCategoryList());
         videoService.save(curVideo.get());
         return new ResponseEntity<>(new ResponMessage(Constant.UPDATE_SUCCESSFUL), HttpStatus.OK);
@@ -114,12 +130,12 @@ public class VideoController {
     private ResponseEntity<?> likeOrUnlikeVideo(
             @PathVariable Long id) {
         User user = userDetailService.getCurrentUser();
-        if (user.getId() == null){
+        if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
         Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
         if (!video.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage(Constant.VIDEO_NOT_FOUND), HttpStatus.OK);
         }
         List<User> likeList = video.get().getLikeList();
         Optional<User> checkLikeList = videoService.findUserLikeByVideoId(id, user.getId());
@@ -139,12 +155,12 @@ public class VideoController {
     public ResponseEntity<?> deleteVideo(
             @PathVariable Long id) {
         User user = userDetailService.getCurrentUser();
-        if (user.getId() == null){
+        if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
         Optional<Channel> channel = channelService.findByUserIdAndStatusIsTrue(user.getId());
         if (!channel.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage("channel_" + Constant.NO_PERMISSION), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
         }
         Optional<Video> curVideo = videoService.findByIdAndChannelId(id, channel.get().getId());
         if (!curVideo.isPresent()) {
