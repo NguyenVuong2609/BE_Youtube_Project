@@ -5,6 +5,8 @@ import com.example.demo.model.User;
 import com.example.demo.repository.ICategoryRepository;
 import com.example.demo.security.userprincal.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,7 +24,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     public Optional<Category> findById(Long id) {
-        return Optional.empty();
+        return categoryRepository.findById(id);
     }
 
     @Override
@@ -41,4 +43,5 @@ public class CategoryServiceImpl implements ICategoryService{
     public Boolean existsByName(String name) {
         return categoryRepository.existsByName(name);
     }
+
 }

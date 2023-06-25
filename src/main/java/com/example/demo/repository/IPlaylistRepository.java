@@ -16,4 +16,5 @@ public interface IPlaylistRepository extends JpaRepository<Playlist, Long> {
     Optional<Video> findVideoByPlaylist(
             @Param("vId") Long vId,
             @Param("plId") Long plId);
+    Optional<Playlist> findByIdAndStatusIsTrue(Long id);
 }

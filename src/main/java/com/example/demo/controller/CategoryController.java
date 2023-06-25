@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("category")
@@ -27,7 +28,7 @@ public class CategoryController {
     private UserDetailService userDetailService;
 
     @GetMapping
-    public ResponseEntity<?> showListCategory() {
+    public ResponseEntity<?> showPageCategory() {
         return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
 
@@ -37,7 +38,7 @@ public class CategoryController {
             @RequestBody
             Category category) {
         User user = userDetailService.getCurrentUser();
-        if (user.getId() == null){
+        if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
         List<Role> roleList = new ArrayList<>(user.getRoles());
@@ -56,5 +57,37 @@ public class CategoryController {
             return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detailCategory(
+            @PathVariable Long id) {
+        System.out.println(id + "abc");
+        Optional<Category> category = categoryService.findById(id);
+        if (!category.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage("not_found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+        Optional<Category> category1 = categoryService.findById(id);
+        if (!category1.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage("not_found"), HttpStatus.OK);
+        }
+        if (!category1.get().getAvatar().equals(category.getAvatar())) {
+            category.setId(category1.get().getId());
+        }
+        if (!category.getName().equals(category1.get().getName())) {
+            if (categoryService.existsByName(category.getName())) {
+                return new ResponseEntity<>(new ResponMessage("name_existed"), HttpStatus.OK);
+            }
+        }
+        if (category.getName().equals(category1.get().getName()) && category.getAvatar().equals(category1.get().getAvatar())) {
+            return new ResponseEntity<>(new ResponMessage("no_change"), HttpStatus.OK);
+        }
+        category.setId(category1.get().getId());
+        categoryService.save(category);
+        return new ResponseEntity<>(new ResponMessage("update_successful"), HttpStatus.OK);
     }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class Video {
     @JoinColumn(name = "video_id")
     private List<Comment> commentList = new ArrayList<>();
     @Column(columnDefinition = "int default(0)")
+    @PositiveOrZero
     private int views = 0;
     @NotNull
     @NotBlank

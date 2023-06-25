@@ -79,6 +79,23 @@ public class VideoController {
         return new ResponseEntity<>(videoService.findByNameContains(name), HttpStatus.OK);
     }
 
+    @GetMapping("like/{id}")
+    public ResponseEntity<?> checkUserLike(@PathVariable Long id){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
+        if (!video.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.VIDEO_NOT_FOUND), HttpStatus.OK);
+        }
+        Optional<User> checkLikeList = videoService.findUserLikeByVideoId(id, user.getId());
+        if (checkLikeList.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.ALREADY), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createVideo(
             @Valid
@@ -94,6 +111,7 @@ public class VideoController {
         }
         Video video = new Video(videoDTO.getName(), videoDTO.getLink(), videoDTO.getAvatar(),
                                 videoDTO.getCategoryList());
+        video.setChannel(channel.get());
         videoService.save(video);
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
     }
@@ -126,7 +144,7 @@ public class VideoController {
         return new ResponseEntity<>(new ResponMessage(Constant.UPDATE_SUCCESSFUL), HttpStatus.OK);
     }
 
-    @PutMapping("{id}/like")
+    @PutMapping("like/{id}")
     private ResponseEntity<?> likeOrUnlikeVideo(
             @PathVariable Long id) {
         User user = userDetailService.getCurrentUser();

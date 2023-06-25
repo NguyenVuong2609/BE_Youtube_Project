@@ -13,4 +13,6 @@ public interface IPlaylistService extends IGenericService<Playlist> {
     Optional<Video> findVideoByPlaylist(
             @Param("vId") Long vId,
             @Param("plId") Long plId);
+
+    Optional<Playlist> findByIdAndStatusIsTrue(Long id);
 }

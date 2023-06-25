@@ -92,9 +92,6 @@ public class VideoServiceImpl implements IVideoService {
 
     @Override
     public void save(Video video) {
-        User user = userDetailService.getCurrentUser();
-        Channel channel = channelRepository.findByUserIdAndStatusIsTrue(user.getId()).get();
-        video.setChannel(channel);
         videoRepository.save(video);
     }
 

@@ -32,6 +32,14 @@ public class PlaylistController {
     public ResponseEntity<?> showAllPlaylist() {
         return new ResponseEntity<>(playlistService.findAll(), HttpStatus.OK);
     }
+    @GetMapping("{id}")
+    public ResponseEntity<?> showDetailPlaylist(@PathVariable Long id){
+        Optional<Playlist> playlist = playlistService.findByIdAndStatusIsTrue(id);
+        if (!playlist.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.PLAYLIST_NOT_FOUND), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(playlist, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> createPlaylist(
