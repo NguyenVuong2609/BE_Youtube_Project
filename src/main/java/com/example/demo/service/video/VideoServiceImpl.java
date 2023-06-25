@@ -1,9 +1,6 @@
 package com.example.demo.service.video;
 
-import com.example.demo.model.Channel;
-import com.example.demo.model.Comment;
-import com.example.demo.model.User;
-import com.example.demo.model.Video;
+import com.example.demo.model.*;
 import com.example.demo.repository.IChannelRepository;
 import com.example.demo.repository.IVideoRepository;
 import com.example.demo.security.userprincal.UserDetailService;
@@ -83,6 +80,16 @@ public class VideoServiceImpl implements IVideoService {
     @Override
     public Iterable<Video> findByNameContains(String name) {
         return videoRepository.findByNameContainsAndStatusIsTrue(name);
+    }
+
+    @Override
+    public Iterable<Category> findListCategoryByVideoId(Long id) {
+        return videoRepository.findListCategoryByVideoId(id);
+    }
+
+    @Override
+    public Iterable<Video> findListVideoByCategory(Long cId, Long vId) {
+        return videoRepository.findListVideoByCategory(cId, vId);
     }
 
     @Override

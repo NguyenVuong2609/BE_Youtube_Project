@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.constant.Constant;
 import com.example.demo.dto.request.VideoDTO;
 import com.example.demo.dto.response.ResponMessage;
+import com.example.demo.model.Category;
 import com.example.demo.model.Channel;
 import com.example.demo.model.User;
 import com.example.demo.model.Video;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,8 +59,18 @@ public class VideoController {
         if (!video.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
         }
-        videoService.updateView(id);
         return new ResponseEntity<>(video, HttpStatus.OK);
+    }
+
+    @GetMapping("view/{id}")
+    public ResponseEntity<?> updateView(
+            @PathVariable Long id) {
+        Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
+        if (!video.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+        }
+        videoService.updateView(id);
+        return new ResponseEntity<>(new ResponMessage(Constant.SUCCESSFUL), HttpStatus.OK);
     }
 
     @GetMapping("{id}/comment")
@@ -70,17 +82,21 @@ public class VideoController {
         }
         return new ResponseEntity<>(videoService.findListCommentByVideoId(id), HttpStatus.OK);
     }
+
     @GetMapping("/topview")
-    public ResponseEntity<?> getListVideoByTopViews(){
+    public ResponseEntity<?> getListVideoByTopViews() {
         return new ResponseEntity<>(videoService.findByStatusIsTrueOrderByViews(), HttpStatus.OK);
     }
+
     @GetMapping("/search/{name}")
-    public ResponseEntity<?> getVideoListSearchByName(@PathVariable String name){
+    public ResponseEntity<?> getVideoListSearchByName(
+            @PathVariable String name) {
         return new ResponseEntity<>(videoService.findByNameContains(name), HttpStatus.OK);
     }
 
     @GetMapping("like/{id}")
-    public ResponseEntity<?> checkUserLike(@PathVariable Long id){
+    public ResponseEntity<?> checkUserLike(
+            @PathVariable Long id) {
         User user = userDetailService.getCurrentUser();
         if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
@@ -90,7 +106,7 @@ public class VideoController {
             return new ResponseEntity<>(new ResponMessage(Constant.VIDEO_NOT_FOUND), HttpStatus.OK);
         }
         Optional<User> checkLikeList = videoService.findUserLikeByVideoId(id, user.getId());
-        if (checkLikeList.isPresent()){
+        if (checkLikeList.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.ALREADY), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
@@ -186,5 +202,31 @@ public class VideoController {
         }
         videoService.deleteById(curVideo.get().getId());
         return new ResponseEntity<>(new ResponMessage(Constant.DELETE_SUCCESSFUL), HttpStatus.OK);
+    }
+
+//    @GetMapping("category/{id}")
+//    public ResponseEntity<?> showListCategoryByVideoId(
+//            @PathVariable Long id) {
+//        Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
+//        if (!video.isPresent()) {
+//            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(videoService.findListCategoryByVideoId(id), HttpStatus.OK);
+//    }
+
+    @GetMapping("related/{id}")
+    public ResponseEntity<?> showRelatedVideo(
+            @PathVariable Long id) {
+        Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
+        if (!video.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+        }
+        Iterable<Category> categoryList = videoService.findListCategoryByVideoId(id);
+        List<Long> categoryIdList = new ArrayList<>();
+        for (Category cat : categoryList) {
+            categoryIdList.add(cat.getId());
+        }
+        Long randomCat = categoryIdList.get((int) Math.floor((Math.random() * categoryIdList.size())));
+        return new ResponseEntity<>(videoService.findListVideoByCategory(randomCat, id), HttpStatus.OK);
     }
 }

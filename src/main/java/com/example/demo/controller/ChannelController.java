@@ -170,7 +170,7 @@ public class ChannelController {
             return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
         }
         List<User> followerList = channel.get().getFollowerList();
-        Optional<User> checkUser = channelService.findUserByChannel(user.getId(), id);
+        Optional<User> checkUser = channelService.findFollowerByChannel(user.getId(), id);
         if (checkUser.isPresent()){
             followerList.remove(checkUser.get());
             channel.get().setFollowerList(followerList);
@@ -181,5 +181,22 @@ public class ChannelController {
         channel.get().setFollowerList(followerList);
         channelService.save(channel.get());
         return new ResponseEntity<>(new ResponMessage(Constant.ADD_SUCCESSFUL), HttpStatus.OK);
+    }
+    @GetMapping("follow/{id}")
+    public ResponseEntity<?> checkUserFollow(
+            @PathVariable Long id) {
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Channel> channel = channelService.findByIdAndStatusIsTrue(id);
+        if (!channel.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_NOT_FOUND), HttpStatus.OK);
+        }
+        Optional<User> checkFollower = channelService.findFollowerByChannel(user.getId(), id);
+        if (checkFollower.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.ALREADY), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
     }
 }

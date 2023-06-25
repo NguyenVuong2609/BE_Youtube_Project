@@ -62,7 +62,7 @@ public class ChannelServiceImpl implements IChannelService {
     }
 
     @Override
-    public Optional<User> findUserByChannel(Long flId, Long chId) {
-        return channelRepository.findUserByChannel(flId,chId);
+    public Optional<User> findFollowerByChannel(Long flId, Long chId) {
+        return channelRepository.findFollowerByChannel(flId,chId);
     }
 }

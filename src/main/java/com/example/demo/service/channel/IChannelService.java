@@ -13,7 +13,7 @@ public interface IChannelService extends IGenericService<Channel> {
     Optional<Channel> findByUserIdAndStatusIsTrue(Long id);
     Optional<Channel> findByIdAndStatusIsTrue(Long id);
     boolean existsByIdAndUserIdAndStatusIsTrue(Long chId, Long uId);
-    Optional<User> findUserByChannel(
+    Optional<User> findFollowerByChannel(
             @Param("flId") Long flId,
             @Param("chId") Long chId);
 }

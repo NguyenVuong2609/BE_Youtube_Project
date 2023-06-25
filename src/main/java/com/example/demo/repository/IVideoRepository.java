@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Comment;
 import com.example.demo.model.User;
 import com.example.demo.model.Video;
@@ -40,4 +41,8 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
     Iterable<Video> findByStatusIsTrueOrderByViewsDesc();
 
     Iterable<Video> findByNameContainsAndStatusIsTrue(String name);
+    @Query("select cl from Video v join v.categoryList cl where v.id = :id")
+    Iterable<Category> findListCategoryByVideoId(@Param("id") Long id);
+    @Query("select v from Video v join v.categoryList cl where cl.id = :cId and v.id != :vId")
+    Iterable<Video> findListVideoByCategory(@Param("cId") Long cId, @Param("vId") Long vId);
 }

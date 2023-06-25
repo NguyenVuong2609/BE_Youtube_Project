@@ -17,7 +17,7 @@ public interface IChannelRepository extends JpaRepository<Channel, Long> {
     Optional<Channel> findByIdAndStatusIsTrue(Long id);
     boolean existsByIdAndUserIdAndStatusIsTrue(Long chId, Long uId);
     @Query("select distinct ch.followerList from Channel ch join ch.followerList fl where fl.id = :flId and ch.id = :chId")
-    Optional<User> findUserByChannel(
+    Optional<User> findFollowerByChannel(
             @Param("flId") Long flId,
             @Param("chId") Long chId);
 }

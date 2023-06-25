@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "comment")
@@ -18,7 +19,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 200)
+    @Size(max = 300)
     private String content;
     @ManyToOne
     @NotNull
@@ -28,4 +29,6 @@ public class Comment {
     @JoinColumn(name = "video_id")
     private Video video;
 
+    @Column(columnDefinition = "datetime default(curdate())")
+    private LocalDate date = LocalDate.now();
 }

@@ -1,11 +1,13 @@
 package com.example.demo.service.video;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Comment;
 import com.example.demo.model.User;
 import com.example.demo.model.Video;
 import com.example.demo.service.IGenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -21,4 +23,6 @@ public interface IVideoService extends IGenericService<Video> {
     Iterable<Video> showRandomVideoList(Pageable pageable);
     Iterable<Video> findByStatusIsTrueOrderByViews();
     Iterable<Video> findByNameContains(String name);
+    Iterable<Category> findListCategoryByVideoId(Long id);
+    Iterable<Video> findListVideoByCategory(Long cId, Long vId);
 }
