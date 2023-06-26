@@ -182,7 +182,7 @@ public class ChannelController {
         channelService.save(channel.get());
         return new ResponseEntity<>(new ResponMessage(Constant.ADD_SUCCESSFUL), HttpStatus.OK);
     }
-    @GetMapping("follow/{id}")
+    @GetMapping("follow/{id}") //! Check follower //
     public ResponseEntity<?> checkUserFollow(
             @PathVariable Long id) {
         User user = userDetailService.getCurrentUser();
@@ -199,7 +199,7 @@ public class ChannelController {
         }
         return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
     }
-    @GetMapping("subscriber/{id}")
+    @GetMapping("subscriber/{id}") //! Get list follower //
     public ResponseEntity<?> showListSubscriber(@PathVariable Long id){
         Optional<Channel> channel = channelService.findByIdAndStatusIsTrue(id);
         if (!channel.isPresent()) {

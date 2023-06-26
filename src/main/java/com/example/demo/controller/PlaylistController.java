@@ -104,5 +104,21 @@ public class PlaylistController {
         playlistService.save(playlist.get());
         return new ResponseEntity<>(new ResponMessage(Constant.ADD_SUCCESSFUL), HttpStatus.OK);
     }
-
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePlaylist(@PathVariable Long id){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Playlist> playlist = playlistService.findById(id);
+        if (!playlist.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.PLAYLIST_NOT_FOUND), HttpStatus.OK);
+        }
+        Optional<Playlist> checkPlaylist = playlistService.findByIdAndUserId(id, user.getId());
+        if (checkPlaylist.isPresent()){
+            playlistService.deleteById(id);
+            return new ResponseEntity<>(new ResponMessage(Constant.REMOVE_SUCCESSFUL), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+    }
 }

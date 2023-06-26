@@ -57,4 +57,21 @@ public class    CommentController {
         Iterable<Comment> commentList = videoService.findListCommentByVideoId(id);
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long id){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Comment> comment = commentService.findById(id);
+        if (!comment.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.COMMENT_NOT_FOUND), HttpStatus.OK);
+        }
+        Optional<Comment> checkComment = commentService.findByIdAndOwnerId(id, user.getId());
+        if (checkComment.isPresent()){
+            commentService.deleteById(id);
+            return new ResponseEntity<>(new ResponMessage(Constant.REMOVE_SUCCESSFUL), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+    }
 }

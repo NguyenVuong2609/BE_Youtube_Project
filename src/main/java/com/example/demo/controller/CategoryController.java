@@ -62,7 +62,6 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<?> detailCategory(
             @PathVariable Long id) {
-        System.out.println(id + "abc");
         Optional<Category> category = categoryService.findById(id);
         if (!category.isPresent()) {
             return new ResponseEntity<>(new ResponMessage("not_found"), HttpStatus.OK);

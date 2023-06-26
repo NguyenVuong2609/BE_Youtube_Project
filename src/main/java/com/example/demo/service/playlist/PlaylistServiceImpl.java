@@ -55,4 +55,9 @@ public class PlaylistServiceImpl implements IPlaylistService{
     public Iterable<Video> findVideoListByPlaylistId(Long id) {
         return playlistRepository.findVideoListByPlaylistId(id);
     }
+
+    @Override
+    public Optional<Playlist> findByIdAndUserId(Long plId, Long uId) {
+        return playlistRepository.findByIdAndUserId(plId,uId);
+    }
 }
