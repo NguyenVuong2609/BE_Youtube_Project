@@ -40,6 +40,26 @@ public class PlaylistController {
         }
         return new ResponseEntity<>(playlist, HttpStatus.OK);
     }
+    @GetMapping("/myplaylist")
+    public ResponseEntity<?> showAllMyPlaylist(){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(playlistService.findByUserId(user.getId()), HttpStatus.OK);
+    }
+    @GetMapping("/myplaylist/{id}")
+    public ResponseEntity<?> showVideoListByPlaylist(@PathVariable Long id){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<Playlist> playlist = playlistService.findByIdAndStatusIsTrue(id);
+        if (!playlist.isPresent()){
+            return new ResponseEntity<>(new ResponMessage(Constant.PLAYLIST_NOT_FOUND), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(playlistService.findVideoListByPlaylistId(id), HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> createPlaylist(
@@ -49,7 +69,7 @@ public class PlaylistController {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
         }
         Playlist playlist = new Playlist();
-        playlist.setPName(playlistDTO.getPName());
+        playlist.setName(playlistDTO.getName());
         playlist.setUser(user);
         playlistService.save(playlist);
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);

@@ -35,7 +35,7 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
     Iterable<Comment> findListCommentByVideoId(
             @Param("id") Long id);
 
-    @Query("select v from Video v order by RAND()")
+    @Query("select v from Video v where v.status = true order by RAND()")
     Page<Video> showRandomVideoList(Pageable pageable);
 
     Iterable<Video> findByStatusIsTrueOrderByViewsDesc();

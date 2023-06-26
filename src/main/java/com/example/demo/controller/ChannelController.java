@@ -199,4 +199,12 @@ public class ChannelController {
         }
         return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
     }
+    @GetMapping("subscriber/{id}")
+    public ResponseEntity<?> showListSubscriber(@PathVariable Long id){
+        Optional<Channel> channel = channelService.findByIdAndStatusIsTrue(id);
+        if (!channel.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.CHANNEL_NOT_FOUND), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(channelService.findFollowerListByChannelId(id), HttpStatus.OK);
+    }
 }

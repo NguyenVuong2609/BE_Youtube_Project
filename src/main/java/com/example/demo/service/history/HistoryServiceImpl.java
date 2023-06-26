@@ -41,8 +41,8 @@ public class HistoryServiceImpl implements IHistoryService{
     }
 
     @Override
-    public Optional<Video> findVideoByHistory(Long vId, Long hId) {
-        return historyRepository.findVideoByHistory(vId,hId);
+    public Optional<Video> findVideoByHistory(Long hisId, Long vidId) {
+        return historyRepository.findVideoByHistory(hisId,vidId);
     }
 
 

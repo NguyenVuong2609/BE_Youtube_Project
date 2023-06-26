@@ -17,4 +17,7 @@ public interface IPlaylistRepository extends JpaRepository<Playlist, Long> {
             @Param("vId") Long vId,
             @Param("plId") Long plId);
     Optional<Playlist> findByIdAndStatusIsTrue(Long id);
+    Iterable<Playlist> findByUserId(Long id);
+    @Query("select distinct pl.videoList from Playlist pl join pl.videoList vd where pl.id =:id and vd.status = true")
+    Iterable<Video> findVideoListByPlaylistId(@Param("id") Long id);
 }

@@ -65,4 +65,9 @@ public class ChannelServiceImpl implements IChannelService {
     public Optional<User> findFollowerByChannel(Long flId, Long chId) {
         return channelRepository.findFollowerByChannel(flId,chId);
     }
+
+    @Override
+    public Iterable<User> findFollowerListByChannelId(Long id) {
+        return channelRepository.findFollowerListByChannelId(id);
+    }
 }

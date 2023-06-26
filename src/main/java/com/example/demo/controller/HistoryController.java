@@ -31,14 +31,29 @@ public class HistoryController {
     @Autowired
     private IVideoService videoService;
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> getListVideoByHistoryId(
-            @PathVariable("id") Long id) {
-        Optional<History> history = historyService.findById(id);
+    @GetMapping
+    public ResponseEntity<?> getListVideoByHistoryId() {
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<History> history = historyService.findByOwnerId(user.getId());
         if (!history.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
         }
-        return new ResponseEntity<>(historyService.getVideoListByHistoryId(id), HttpStatus.OK);
+        return new ResponseEntity<>(historyService.getVideoListByHistoryId(history.get().getId()), HttpStatus.OK);
+    }
+    @GetMapping("myhistory")
+    public ResponseEntity<?> getMyHistory(){
+        User user = userDetailService.getCurrentUser();
+        if (user.getId() == null){
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+        }
+        Optional<History> history = historyService.findByOwnerId(user.getId());
+        if (!history.isPresent()) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(history, HttpStatus.OK);
     }
 
     @PostMapping
@@ -74,7 +89,7 @@ public class HistoryController {
             return new ResponseEntity<>(new ResponMessage("history_" +Constant.NOT_FOUND), HttpStatus.OK);
         }
         List<Video> videoList = history.get().getVideoList();
-        Optional<Video> video = historyService.findVideoByHistory(id, history.get().getId());
+        Optional<Video> video = historyService.findVideoByHistory(history.get().getId(), id);
         if (video.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.HISTORY_EXISTED), HttpStatus.OK);
         }
@@ -83,26 +98,17 @@ public class HistoryController {
         historyService.save(history.get());
         return new ResponseEntity<>(new ResponMessage(Constant.ADD_SUCCESSFUL), HttpStatus.OK);
     }
-    @PutMapping("/remove/{id}")
-    public ResponseEntity<?> removeVideo(@PathVariable Long id){
+    @PutMapping("/remove")
+    public ResponseEntity<?> removeVideo(){
         User user = userDetailService.getCurrentUser();
         if (user.getId() == null) {
             return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
-        }
-        Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
-        if (!video.isPresent()){
-            return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
         }
         Optional<History> history = historyService.findByOwnerId(user.getId());
         if (!history.isPresent()){
             return new ResponseEntity<>(new ResponMessage("history_" +Constant.NOT_FOUND), HttpStatus.OK);
         }
-        List<Video> videoList = history.get().getVideoList();
-        Optional<Video> oldVideo = historyService.findVideoByHistory(id, history.get().getId());
-        if (!oldVideo.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage(Constant.UNSUCCESSFUL), HttpStatus.OK);
-        }
-        videoList.remove(oldVideo.get());
+        List<Video> videoList = new ArrayList<>();
         history.get().setVideoList(videoList);
         historyService.save(history.get());
         return new ResponseEntity<>(new ResponMessage(Constant.REMOVE_SUCCESSFUL), HttpStatus.OK);

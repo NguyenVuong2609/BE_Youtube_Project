@@ -14,5 +14,5 @@ import javax.validation.constraints.NotNull;
 public class PlaylistDTO {
     @NotBlank
     @NotNull
-    private String pName;
+    private String name;
 }

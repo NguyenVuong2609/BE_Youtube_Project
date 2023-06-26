@@ -16,4 +16,5 @@ public interface IChannelService extends IGenericService<Channel> {
     Optional<User> findFollowerByChannel(
             @Param("flId") Long flId,
             @Param("chId") Long chId);
+    Iterable<User> findFollowerListByChannelId(Long id);
 }

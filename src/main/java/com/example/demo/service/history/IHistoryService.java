@@ -12,5 +12,5 @@ public interface IHistoryService {
     Iterable<Video> getVideoListByHistoryId(Long id);
     Optional<History> findByOwnerUsername(String username);
     Optional<History> findByOwnerId(Long id);
-    Optional<Video> findVideoByHistory(Long vId, Long hId);
+    Optional<Video> findVideoByHistory(Long hisId, Long vidId);
 }

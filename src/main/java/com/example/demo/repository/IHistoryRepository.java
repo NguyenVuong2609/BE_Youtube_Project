@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface IHistoryRepository extends JpaRepository<History, Long> {
-    @Query("select h.videoList from History h join h.videoList vl where h.id = :id and vl.status = true")
+    @Query("select distinct h.videoList from History h join h.videoList vl where h.id = :id and vl.status = true")
     Iterable<Video> getListVideo(
             @Param("id") Long id);
 
@@ -19,8 +19,8 @@ public interface IHistoryRepository extends JpaRepository<History, Long> {
 
     Optional<History> findByOwnerId(Long id);
 
-    @Query("select distinct h.videoList from History h join h.videoList vl where vl.id = :vId and h.id = :hId")
+    @Query("select distinct h.videoList from History h join h.videoList vd where h.id =:hisId and vd.id =:vidId")
     Optional<Video> findVideoByHistory(
-            @Param("vId") Long vId,
-            @Param("hId") Long hId);
+            @Param("hisId") Long hisId,
+            @Param("vidId") Long vidId);
 }

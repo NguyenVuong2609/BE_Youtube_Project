@@ -15,4 +15,6 @@ public interface IPlaylistService extends IGenericService<Playlist> {
             @Param("plId") Long plId);
 
     Optional<Playlist> findByIdAndStatusIsTrue(Long id);
+    Iterable<Playlist> findByUserId(Long id);
+    Iterable<Video> findVideoListByPlaylistId(Long id);
 }

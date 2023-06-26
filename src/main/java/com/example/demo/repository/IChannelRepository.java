@@ -20,4 +20,6 @@ public interface IChannelRepository extends JpaRepository<Channel, Long> {
     Optional<User> findFollowerByChannel(
             @Param("flId") Long flId,
             @Param("chId") Long chId);
+    @Query("select ch.followerList from Channel ch where ch.id =:id")
+    Iterable<User> findFollowerListByChannelId(@Param("id") Long id);
 }

@@ -21,7 +21,7 @@ public class Playlist {
     private Long id;
     @NotBlank
     @NotNull
-    private String pName;
+    private String name;
     private boolean status = true;
     @ManyToOne
     @NotNull
