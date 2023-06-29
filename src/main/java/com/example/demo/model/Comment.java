@@ -24,10 +24,7 @@ public class Comment {
     @ManyToOne
     @NotNull
     private User owner;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "video_id")
+    @Transient
     private Video video;
-
     private LocalDate date = LocalDate.now();
 }

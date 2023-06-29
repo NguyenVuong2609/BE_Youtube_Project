@@ -44,7 +44,7 @@ public class Video {
             joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "category_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"video_id","category_id"}))
     private List<Category> categoryList = new ArrayList<>();
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "video_id")
     private List<Comment> commentList = new ArrayList<>();
 

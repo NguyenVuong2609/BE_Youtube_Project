@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -39,11 +40,12 @@ public class    CommentController {
         if (!video.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
         }
+        List<Comment> commentList = video.get().getCommentList();
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
         comment.setOwner(user);
-        comment.setVideo(video.get());
-        commentService.save(comment);
+        commentList.add(comment);
+        videoService.save(video.get());
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
     }
 
