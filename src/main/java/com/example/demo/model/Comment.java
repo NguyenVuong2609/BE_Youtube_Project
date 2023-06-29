@@ -29,6 +29,5 @@ public class Comment {
     @JoinColumn(name = "video_id")
     private Video video;
 
-    @Column(columnDefinition = "datetime default(curdate())")
     private LocalDate date = LocalDate.now();
 }

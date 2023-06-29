@@ -27,7 +27,7 @@ public class Video {
     @NotBlank
     @NotNull
     private String vLink;
-    @Column(columnDefinition = "datetime default(curdate())")
+
     private LocalDate date = LocalDate.now();
     private boolean status = true;
     @ManyToOne
@@ -47,7 +47,7 @@ public class Video {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private List<Comment> commentList = new ArrayList<>();
-    @Column(columnDefinition = "int default(0)")
+
     @PositiveOrZero
     private int views = 0;
     @NotNull
