@@ -24,10 +24,10 @@ public class Comment {
     @ManyToOne
     @NotNull
     private User owner;
-//    @ManyToOne
-//    @JsonIgnore
-//    @JoinColumn(name = "video_id")
-//    private Video video;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "video_id")
+    private Video video;
 
     @Column(columnDefinition = "datetime default(curdate())")
     private LocalDate date = LocalDate.now();

@@ -42,7 +42,7 @@ public class    CommentController {
         Comment comment = new Comment();
         comment.setContent(commentDTO.getContent());
         comment.setOwner(user);
-//        comment.setVideo(video.get());
+        comment.setVideo(video.get());
         commentService.save(comment);
         return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
     }
