@@ -42,8 +42,13 @@ public class RoleServiceImpl implements IRoleService {
             roleRepository.saveAll(roleList);
             Set<Role> roleSet = new HashSet<>();
             roleSet.add(new Role(3L, RoleName.ADMIN));
-            User user = new User(1L, "ADMIN", "admin", "admin@admin.com", passwordEncoder.encode("admin")
-                    , roleSet);
+            User user = new User();
+            user.setId(1L);
+            user.setName("ADMIN");
+            user.setUsername("admin");
+            user.setEmail("admin@admin.com");
+            user.setPassword(passwordEncoder.encode("admin"));
+            user.setRoles(roleSet);
             userRepository.save(user);
         }
     }
