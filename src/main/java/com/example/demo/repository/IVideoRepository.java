@@ -45,4 +45,5 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
     Iterable<Category> findListCategoryByVideoId(@Param("id") Long id);
     @Query("select v from Video v join v.categoryList cl where cl.id = :cId and v.id != :vId")
     Iterable<Video> findListVideoByCategory(@Param("cId") Long cId, @Param("vId") Long vId);
+
 }
