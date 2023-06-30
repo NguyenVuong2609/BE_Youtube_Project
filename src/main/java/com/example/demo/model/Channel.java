@@ -41,7 +41,7 @@ public class Channel {
     @JsonIgnore
     private List<Video> videoList;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = FetchMode.SUBSELECT) //! Force all attributes to fetch type we choose
     @JoinTable(name = "follower",
                joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "user_id"),
                uniqueConstraints = @UniqueConstraint(columnNames = {"channel_id", "user_id"}))
