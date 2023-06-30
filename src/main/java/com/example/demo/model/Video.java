@@ -28,6 +28,7 @@ public class Video {
     private String name;
     @NotBlank
     @NotNull
+    @Lob
     private String vLink;
 
     private LocalDate date = LocalDate.now();
