@@ -46,7 +46,7 @@ public class AuthController {
     JwtProvider jwtProvider;
     @Autowired
     JwtTokenFilter jwtTokenFilter;
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<?> showAllUser(){
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
