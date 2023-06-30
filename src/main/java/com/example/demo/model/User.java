@@ -47,7 +47,7 @@ public class User {
     private boolean status = true;
     @Lob
     private String avatar = "https://firebasestorage.googleapis.com/v0/b/vuongcuti-6ce58.appspot.com/o/images.png?alt=media&token=568b3bcc-c852-4669-9cd3-d4684ce4ad70&_gl=1*1jze9dn*_ga*NTk4MDQwMzA2LjE2ODM3NjczNjA.*_ga_CW55HF8NVT*MTY4NjYzMTIzOS4xNC4xLjE2ODY2MzEzMjMuMC4wLjA.";
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     Set<Role> roles = new HashSet<>();
