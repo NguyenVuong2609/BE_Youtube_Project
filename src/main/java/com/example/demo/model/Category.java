@@ -24,7 +24,6 @@ public class Category {
     private String avatar
             = "https://firebasestorage.googleapis.com/v0/b/vuongcuti-6ce58.appspot.com/o/logometube.jpg?alt=media&token=40cddf41-2a5a-4b9c-ade7-eb54cc22e55a";
     @ManyToOne
-    @JsonIgnore
     private User user;
     @Transient
     private List<Video> videoList;

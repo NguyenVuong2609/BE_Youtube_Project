@@ -44,7 +44,7 @@ public class Video {
     private List<User> likeList = new ArrayList<>();
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-//    @NotNull
+    @NotNull
     @JoinTable(name = "video_cat",
                joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "category_id"),
                uniqueConstraints = @UniqueConstraint(columnNames = {"video_id", "category_id"}))
