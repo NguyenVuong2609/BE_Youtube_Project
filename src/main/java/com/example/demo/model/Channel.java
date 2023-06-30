@@ -38,7 +38,7 @@ public class Channel {
     @Transient
     @JsonIgnore
     private List<Video> videoList;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "follower",
                joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "user_id"),
                uniqueConstraints = @UniqueConstraint(columnNames = {"channel_id", "user_id"}))

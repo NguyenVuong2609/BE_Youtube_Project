@@ -33,12 +33,12 @@ public class Video {
     @ManyToOne
     @NotNull
     private Channel channel;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_like",
             joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
     ,uniqueConstraints = @UniqueConstraint(columnNames = {"video_id","user_id"}))
     private List<User> likeList = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @NotNull
     @JoinTable(name = "video_cat",
             joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "category_id"),
