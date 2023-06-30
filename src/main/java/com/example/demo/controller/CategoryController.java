@@ -37,26 +37,33 @@ public class CategoryController {
             @Valid
             @RequestBody
             Category category) {
-        User user = userDetailService.getCurrentUser();
-        if (user.getId() == null) {
-            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+//        User user = userDetailService.getCurrentUser();
+//        if (user.getId() == null) {
+//            return new ResponseEntity<>(new ResponMessage(Constant.NOT_LOGIN), HttpStatus.OK);
+//        }
+//        List<Role> roleList = new ArrayList<>(user.getRoles());
+//        boolean checkRole = false;
+//        for (Role role : roleList) {
+//            if (role.getName().equals(RoleName.ADMIN)) {
+//                checkRole = true;
+//                break;
+//            }
+//        }
+//        if (checkRole) {
+//            if (categoryService.existsByName(category.getName())) {
+//                return new ResponseEntity<>(new ResponMessage(Constant.NAME_EXISTED), HttpStatus.OK);
+//            }
+//            categoryService.save(category);
+//            return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+
+
+        if (categoryService.existsByName(category.getName())) {
+            return new ResponseEntity<>(new ResponMessage(Constant.NAME_EXISTED), HttpStatus.OK);
         }
-        List<Role> roleList = new ArrayList<>(user.getRoles());
-        boolean checkRole = false;
-        for (Role role : roleList) {
-            if (role.getName().equals(RoleName.ADMIN)) {
-                checkRole = true;
-                break;
-            }
-        }
-        if (checkRole) {
-            if (categoryService.existsByName(category.getName())) {
-                return new ResponseEntity<>(new ResponMessage(Constant.NAME_EXISTED), HttpStatus.OK);
-            }
-            categoryService.save(category);
-            return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ResponMessage(Constant.NO_PERMISSION), HttpStatus.OK);
+        categoryService.save(category);
+        return new ResponseEntity<>(new ResponMessage(Constant.CREATE_SUCCESS), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

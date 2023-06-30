@@ -29,8 +29,6 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     public void save(Category category) {
-        User user = userDetailService.getCurrentUser();
-        category.setUser(user);
         categoryRepository.save(category);
     }
 
