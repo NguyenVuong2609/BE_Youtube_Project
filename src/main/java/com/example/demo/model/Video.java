@@ -42,7 +42,8 @@ public class Video {
                joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "user_id")
             , uniqueConstraints = @UniqueConstraint(columnNames = {"video_id", "user_id"}))
     private List<User> likeList = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @NotNull
     @JoinTable(name = "video_cat",
                joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "category_id"),
