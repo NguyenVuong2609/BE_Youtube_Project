@@ -217,6 +217,7 @@ public class VideoController {
     @GetMapping("related/{id}")
     public ResponseEntity<?> showRelatedVideo(
             @PathVariable Long id) {
+        System.out.println(id);
         Optional<Video> video = videoService.findByIdAndStatusIsTrue(id);
         if (!video.isPresent()) {
             return new ResponseEntity<>(new ResponMessage(Constant.NOT_FOUND), HttpStatus.OK);
